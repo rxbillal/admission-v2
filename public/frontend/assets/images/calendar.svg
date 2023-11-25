@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="77" viewBox="0 0 77 77">
+  <g id="Group_1" data-name="Group 1" transform="translate(-451 224)">
+    <g id="calender-icon">
+      <circle id="Ellipse_1" data-name="Ellipse 1" cx="38.5" cy="38.5" r="38.5" transform="translate(451 -224)" fill="#448ced"/>
+    </g>
+    <g id="surface24751904" transform="translate(448.163 -212.375)">
+      <path id="Path_1" data-name="Path 1" d="M31.111,8a1.719,1.719,0,0,0-1.778,1.65V11.3H27.556A3.445,3.445,0,0,0,24,14.6V37.7A3.445,3.445,0,0,0,27.556,41H52.444A3.445,3.445,0,0,0,56,37.7V14.6a3.445,3.445,0,0,0-3.556-3.3H50.667V9.65a1.783,1.783,0,0,0-3.556,0V11.3H32.889V9.65A1.719,1.719,0,0,0,31.111,8ZM27.556,19.55H52.444v16.5a1.719,1.719,0,0,1-1.778,1.65H29.333a1.719,1.719,0,0,1-1.778-1.65Zm0,0" transform="translate(1.837 2.375)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

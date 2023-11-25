@@ -1,0 +1,77 @@
+.bg_ab {
+  background-image: url("../../images/bg_b.jpg");
+  background-repeat: repeat;
+}
+
+.i_ab_style {
+  background: #f6f6f6;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 38px;
+  line-height: 40px;
+  padding: 0 15px;
+  border-radius: 3px;
+  border: 1px solid #dfdfdf;
+  outline: none;
+  color: #009735;
+  font-size: 13px;
+}
+
+.i_ab_style::placeholder {
+  color: #009735;
+}
+
+.s_ab {
+  background: #009735;
+  width: 100px;
+  height: 33px;
+  line-height: 30px;
+  padding: 0 15px;
+  border-radius: 3px;
+  border: 1px solid #009735;
+  outline: none;
+  color: #fff;
+  font-weight: 700;
+}
+.s2_ab {
+  display: block;
+
+  font-size: 12px;
+}
+
+.u_ab {
+  width: 100%;
+  margin-top: 25px;
+  text-align: center;
+  display: block;
+  padding: 0;
+}
+
+.login100-itle {
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+
+  display: block;
+}
+
+.li_ab {
+  /* list-style: none;
+float: left;
+width: 140px; */
+  padding: 10px;
+  margin-right: 10px;
+}
+.a_ab {
+  color: #009735;
+  text-decoration: none;
+}
+.a_ab:hover {
+  color: #009735;
+}
+
+.i_ab {
+  color: #009735;
+  font-size: 18px;
+  margin: 5px 5px 0 0;
+}

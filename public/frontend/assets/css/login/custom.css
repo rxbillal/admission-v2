@@ -1,0 +1,13 @@
+/*============================================================================================*/
+/* Your custom styles below */
+/*============================================================================================*/
+.invalid-feedback {
+    display: inline-block !important;
+    
+}
+
+@media only screen and (max-width: 600px) {
+    .content-left-wrapper figure img {
+        height: inherit;
+    }
+  }
