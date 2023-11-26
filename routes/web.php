@@ -59,6 +59,7 @@ Route::middleware(['admin'])->group(function () {
     Route::post('update-profile/{id}', [ListController::class, 'Updateapplicant'])->name('update-profile');
     Route::get('/student-report', [StudentReportController::class, 'index'])->name('student-report.index');
     Route::post('/student-report-export', [StudentReportController::class, 'export']);
+    Route::get('/export-pdf', [StudentReportController::class, 'exportPdf'])->name('export-pdf');
 
 
 

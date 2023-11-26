@@ -24,7 +24,7 @@
             <div class="container-fluid">
               <div class="row">
                   <div class="col-12">
-                   {{--   <div class="card">
+                     {{-- <div class="card">
                           <div class="card-body">
                               <div class="form-group">
                                   <label><strong>Filter :</strong></label>
@@ -35,11 +35,26 @@
                                   </select>
                               </div>
                           </div>
-                      </div>--}}
+                      </div> --}}
                      <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="card-title">
+                                        Student Report
+                                    </div>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <button type="button" class="btn btn-sm btn-warning">
+                                        <a href="{{ route('export-pdf') }}">PDF</a>
+                                    </button>
+                                    <button type="submit"  name="action" value="excel" class="btn btn-sm btn-primary">Excel</button>
+                                </div>
+                            </div>
+                        </div>
                          <form action="{{url('student-report-export')}}" method="post">
                              @csrf
-                             <div class="card-header">
+                             {{-- <div class="card-header">
                                  <div class="row">
                                      <div class="col-8">
                                          <div class="card-title">
@@ -51,7 +66,7 @@
                                          <button type="submit"  name="action" value="excel" class="btn btn-sm btn-primary">Excel</button>
                                      </div>
                                  </div>
-                             </div>
+                             </div> --}}
                              <div class="card-body">
                                  <div class="row">
                                      <div class="col-3">

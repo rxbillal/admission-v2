@@ -4,6 +4,7 @@
 <!-- jQuery UI 1.11.4 -->
 <script src="{{asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+
 <script>
     $.widget.bridge('uibutton', $.ui.button)
 </script>
@@ -33,6 +34,10 @@
 <!--Toaster-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
 @switch(Request::segment(1))
     @case('list')
     <script>
@@ -325,7 +330,7 @@
     @case('student-report')
     <script>
     $(function () {
-        var table =  $("#report").DataTable({
+        var table = $("#report").DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -349,10 +354,15 @@
             ],
             dom: 'Bfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print', 'colvis'
+                'copy', 'csv', 'excel', 'print', 'colvis'
             ],
             select: true
         });
+
+        function exportToPDF() {
+            // Trigger the DataTable's PDF export button click
+            $('#report').DataTable().button('pdf').trigger();
+        }
 
         $('#department').change(function(){
             getSubject($('#department').val());

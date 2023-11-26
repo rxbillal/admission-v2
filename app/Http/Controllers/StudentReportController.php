@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
+use PDF;
 
 
 class StudentReportController extends Controller
@@ -23,7 +24,7 @@ class StudentReportController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $sub_id = $request->input('subject');
+            $sub_id         = $request->input('subject');
             $select_subject = Sub::find($sub_id);
 
             $data = User::select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
@@ -69,6 +70,30 @@ class StudentReportController extends Controller
             'department_list' => $departments,
             'subject_list' => $sub
         ], 200);
+    }
+
+
+    //------------------------------------------------------------------//
+    //                 GET REPORT PDF METHOD                            //
+    //------------------------------------------------------------------//
+    public function exportPdf(Request $request){
+            $sub_id         = $request->input('subject');
+            $select_subject = Sub::find($sub_id);
+
+            $data           = User::select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
+
+            if ($select_subject) {
+                $data->where(function ($q) use ($select_subject) {
+                    $q->where('admitted_subject', 'LIKE', '%' . $select_subject->sub_name . '%')
+                        ->orWhereNull('admitted_subject');
+                });
+            }
+
+            $users = $data->get();
+
+            $pdf = PDF::loadView('pages.report.report', compact('users'));
+            
+            return $pdf->download('student-report.pdf');
     }
 
 }
