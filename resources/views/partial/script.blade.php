@@ -350,7 +350,8 @@
                 { data: 'email', name: 'email' },
                 { data: 'phone', name: 'phone' },
                 { data: 'admitted_subject', name: 'admitted_subject' },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
+                { data: 'city', name: 'city' },
+                // { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
             dom: 'Bfrtip',
             buttons: [

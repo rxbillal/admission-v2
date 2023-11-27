@@ -122,7 +122,7 @@
                                         <th  width="15%">Email</th>
                                         <th  width="15%">Phone</th>
                                         <th  width="15%">Subject</th>
-                                        <th  width="10%">Action</th>
+                                        <th  width="15%">State</th>
                                     </tr>
                                  </thead>
                                  <tbody>

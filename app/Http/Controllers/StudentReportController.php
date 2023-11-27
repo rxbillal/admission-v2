@@ -24,10 +24,13 @@ class StudentReportController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $sub_id         = $request->input('subject');
+            $sub_id          = $request->input('subject');
+             $state          = $request->input('state');
+             $start          = $request->input('start_date');
+             $end            = $request->input('end_date');
             $select_subject = Sub::find($sub_id);
 
-            $data = User::select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
+            $data = User::with('personalInfo')->select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
 
             if ($select_subject) {
                 $data->where(function($q) use ($select_subject) {
@@ -36,15 +39,28 @@ class StudentReportController extends Controller
                 });
             }
 
+            if($start){
+                $data->whereDate('created_at', \Carbon\Carbon::parse($start));
+            }
+            if($end){
+                $data->whereDate('updated_at', \Carbon\Carbon::parse($end));
+            }
+
+            if ($state) {
+                $data->whereHas('personalInfo', function ($q) use ($state) {
+                    $q->where('state', $state);
+                });
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('full_name', function ($data) {
                     return ucwords(strtolower($data->fname . ' ' . $data->lname));
                 })
-                ->addColumn('action', function ($row) {
-                    return '<button class="btn btn-info btn-sm">Action</button>';
+                ->addColumn('city', function ($data) {
+                    return ucwords(strtolower(@$data->personalInfo->city->city_name));
                 })
-                ->rawColumns(['application_id', 'full_name', 'email', 'phone', 'action'])
+                ->rawColumns(['application_id', 'full_name', 'email', 'phone', 'city', 'action'])
                 ->make(true);
         }
 
@@ -78,9 +94,11 @@ class StudentReportController extends Controller
     //------------------------------------------------------------------//
     public function exportPdf(Request $request){
             $sub_id         = $request->input('subject');
+            $state          = $request->input('state');
             $select_subject = Sub::find($sub_id);
 
-            $data           = User::select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
+            $data           = User::with('personalInfo')
+                                    ->select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
 
             if ($select_subject) {
                 $data->where(function ($q) use ($select_subject) {
@@ -92,7 +110,7 @@ class StudentReportController extends Controller
             $users = $data->get();
 
             $pdf = PDF::loadView('pages.report.report', compact('users'));
-            
+
             return $pdf->download('student-report.pdf');
     }
 

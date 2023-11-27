@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Report</title>
     <style>
-        /* Add any custom styles for the PDF here */
     </style>
 </head>
 <body>
@@ -20,6 +19,7 @@
                 <th style="color:#fff">Phone</th>
                 <th style="color:#fff">Full Name</th>
                 <th style="color:#fff">Admitted Subject</th>
+                <th style="color:#fff">State</th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +31,7 @@
                     <td style="height: 18px; font-size:12px">{{ $user->phone }}</td>
                     <td style="height: 18px; font-size:12px">{{ $user->fname }} {{ $user->lname }}</td>
                     <td style="height: 18px; font-size:12px">{{ $user->admitted_subject }}</td>
+                    <td style="height: 18px; font-size:12px">{{ @$user->personalInfo->city->city_name }}</td>
                 </tr>
             @endforeach
         </tbody>
