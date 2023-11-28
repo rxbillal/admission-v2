@@ -23,7 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
+            @foreach($chunk as $user)
                 <tr>
                     <td style="height: 18px; font-size:12px;">{{ $user->id }}</td>
                     <td style="height: 18px; font-size:12px">{{ $user->application_id }}</td>

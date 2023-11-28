@@ -28,7 +28,7 @@ class StudentReportController extends Controller
              $state          = $request->input('state');
              $start          = $request->input('start_date');
              $end            = $request->input('end_date');
-            $select_subject = Sub::find($sub_id);
+             $select_subject = Sub::find($sub_id);
 
             $data = User::with('personalInfo')->select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
 
@@ -92,26 +92,46 @@ class StudentReportController extends Controller
     //------------------------------------------------------------------//
     //                 GET REPORT PDF METHOD                            //
     //------------------------------------------------------------------//
-    public function exportPdf(Request $request){
-            $sub_id         = $request->input('subject');
-            $state          = $request->input('state');
-            $select_subject = Sub::find($sub_id);
 
-            $data           = User::with('personalInfo')
-                                    ->select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
 
-            if ($select_subject) {
-                $data->where(function ($q) use ($select_subject) {
-                    $q->where('admitted_subject', 'LIKE', '%' . $select_subject->sub_name . '%')
-                        ->orWhereNull('admitted_subject');
-                });
+    public function exportPdf(Request $request)
+    {
+
+        $sub_id = $request->input('subject');
+        $state = $request->input('state');
+        $select_subject = Sub::find($sub_id);
+
+        $data = User::with('personalInfo')
+            ->select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
+
+        if ($select_subject) {
+            $data->where(function ($q) use ($select_subject) {
+                $q->where('admitted_subject', 'LIKE', '%' . $select_subject->sub_name . '%')
+                    ->orWhereNull('admitted_subject');
+            });
+        }
+
+        $users = $data->get();
+
+        $chunks = $users->chunk(100);
+
+        $mergedPdf = new \Mpdf\Mpdf();
+        foreach ($chunks as $index => $chunk) {
+            $tempPdf = storage_path("temp_report_chunk_{$index}.pdf");
+            $pdf = PDF::loadView('pages.report.report', compact('chunk'));
+            $pdf->save($tempPdf);
+
+            $pageCount = $mergedPdf->SetSourceFile($tempPdf);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tplIdx = $mergedPdf->ImportPage($i);
+                $mergedPdf->AddPage();
+                $mergedPdf->UseTemplate($tplIdx);
             }
+        }
 
-            $users = $data->get();
-
-            $pdf = PDF::loadView('pages.report.report', compact('users'));
-
-            return $pdf->download('student-report.pdf');
+        $mergedPdf->Output('student-report.pdf', 'D');
     }
+
+
 
 }
