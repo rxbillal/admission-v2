@@ -45,15 +45,19 @@
                                     </div>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <button type="button" class="btn btn-sm btn-warning">
-                                        <a href="{{ route('export-pdf') }}">PDF</a>
-                                    </button>
-                                    <button type="submit"  name="action" value="excel" class="btn btn-sm btn-primary">Excel</button>
+                                    <form action="{{ route('export-pdf') }}">
+                                        <button type="submit" class="btn btn-sm btn-warning">
+                                            {{-- <a href="{{ route('export-pdf') }}"> --}}
+                                                PDF
+                                            {{-- </a> --}}
+                                        </button>
+                                    {{-- </form>yssss --}}
+                                    <button type="button"  name="action" value="excel" class="btn btn-sm btn-primary">Excel</button>
                                 </div>
                             </div>
                         </div>
-                         <form action="{{url('student-report-export')}}" method="post">
-                             @csrf
+                         {{-- <form action="{{url('student-report-export')}}" method="post">
+                             @csrf --}}
                              {{-- <div class="card-header">
                                  <div class="row">
                                      <div class="col-8">

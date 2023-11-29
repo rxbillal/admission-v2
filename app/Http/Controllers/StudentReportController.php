@@ -24,7 +24,7 @@ class StudentReportController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $sub_id          = $request->input('subject');
+             $sub_id          = $request->input('subject');
              $state          = $request->input('state');
              $start          = $request->input('start_date');
              $end            = $request->input('end_date');
@@ -94,43 +94,75 @@ class StudentReportController extends Controller
     //------------------------------------------------------------------//
 
 
-    public function exportPdf(Request $request)
-    {
+   public function exportPdf(Request $request){
 
-        $sub_id = $request->input('subject');
-        $state = $request->input('state');
-        $select_subject = Sub::find($sub_id);
+        try {
 
-        $data = User::with('personalInfo')
-            ->select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
+            $sub_id         = $request->input('subject');
+            $state          = $request->input('state');
+            $start          = $request->input('start_date');
+            $end            = $request->input('end_date');
+            $select_subject = Sub::find($sub_id);
 
-        if ($select_subject) {
-            $data->where(function ($q) use ($select_subject) {
-                $q->where('admitted_subject', 'LIKE', '%' . $select_subject->sub_name . '%')
-                    ->orWhereNull('admitted_subject');
-            });
-        }
+            $data = User::with('personalInfo')
+                ->select('id', 'application_id', 'email', 'phone', 'first_name as fname', 'last_name as lname', 'admitted_subject');
 
-        $users = $data->get();
-
-        $chunks = $users->chunk(100);
-
-        $mergedPdf = new \Mpdf\Mpdf();
-        foreach ($chunks as $index => $chunk) {
-            $tempPdf = storage_path("temp_report_chunk_{$index}.pdf");
-            $pdf = PDF::loadView('pages.report.report', compact('chunk'));
-            $pdf->save($tempPdf);
-
-            $pageCount = $mergedPdf->SetSourceFile($tempPdf);
-            for ($i = 1; $i <= $pageCount; $i++) {
-                $tplIdx = $mergedPdf->ImportPage($i);
-                $mergedPdf->AddPage();
-                $mergedPdf->UseTemplate($tplIdx);
+            if ($select_subject) {
+                $data->where(function ($q) use ($select_subject) {
+                    $q->where('admitted_subject', 'LIKE', '%' . $select_subject->sub_name . '%')
+                        ->orWhereNull('admitted_subject');
+                });
             }
-        }
 
-        $mergedPdf->Output('student-report.pdf', 'D');
-    }
+            if($start){
+                $data->whereDate('created_at', \Carbon\Carbon::parse($start));
+            }
+            if($end){
+                $data->whereDate('updated_at', \Carbon\Carbon::parse($end));
+            }
+
+            if ($state) {
+                $data->whereHas('personalInfo', function ($q) use ($state) {
+                    $q->where('state', $state);
+                });
+            }
+
+            $users = $data->get();
+
+            $chunks = $users->chunk(100);
+
+            $mergedPdf = new \Mpdf\Mpdf();
+            foreach ($chunks as $index => $chunk) {
+                $tempPdf = storage_path("temp_report_chunk_{$index}.pdf");
+                $pdf = PDF::loadView('pages.report.report', compact('chunk'));
+                $pdf->save($tempPdf);
+
+                $pageCount = $mergedPdf->SetSourceFile($tempPdf);
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $tplIdx = $mergedPdf->ImportPage($i);
+                    $mergedPdf->AddPage();
+                    $mergedPdf->UseTemplate($tplIdx);
+                }
+
+                // Clean up temporary files
+                if (file_exists($tempPdf)) {
+                    unlink($tempPdf);
+                }
+            }
+
+            $mergedPdf->Output('student-report.pdf', 'D');
+        } catch (\Exception $e) {
+            foreach ($chunks as $index => $chunk) {
+                $tempPdf = storage_path("temp_report_chunk_{$index}.pdf");
+                if (file_exists($tempPdf)) {
+                    unlink($tempPdf);
+                }
+            }
+
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+}
+
 
 
 
